@@ -1,277 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinted Tracker Pro</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(120deg,#121212,#1e1e1e);
-    color: #e0e0e0;
-    padding: 20px;
-    margin: 0;
-  }
-  h1 {
-    text-align: center;
-    background: linear-gradient(90deg,#ff4b5c,#ff9800);
-    -webkit-background-clip: text;
-    color: transparent;
-    font-size: 2.5em;
-    margin-bottom: 15px;
-  }
-  label { font-weight: bold; }
-  input, select, button {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 16px;
-  }
-  input, select { width: 100%; box-sizing: border-box; background:#272727; color:#e0e0e0; border:1px solid #444;}
-  input:focus, select:focus { outline:none; border-color:#ff4b5c;}
-  button { font-weight:bold; transition: all 0.2s; cursor:pointer; }
-  #addBtn { background:#1abc9c; color:#121212; }
-  #addBtn:hover { background:#16a085; transform:scale(1.05); }
-  #deleteAllBtn { background:#ff4b5c; color:#fff; }
-  #deleteAllBtn:hover { background:#e53950; transform:scale(1.05); }
-
-  #salesTable { width:100%; border-collapse:collapse; margin-top:20px; border-radius:12px; overflow:hidden; background:#1b1b1b; }
-  th, td { padding:12px; text-align:left; }
-  th { background:#272727; color:#ff4b5c; }
-  td { border-bottom:1px solid #333; }
-  tr:hover { background:#2a2a2a; box-shadow:0 0 8px #ff9800; transition:0.3s; }
-  .fade-in { animation: fadeIn 0.5s ease-in-out; }
-  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-
-  .profit-positive { color:#1abc9c; font-weight:bold; }
-  .profit-negative { color:#ff4b5c; font-weight:bold; }
-
-  #total { margin-top:20px; font-weight:bold; font-size:20px; text-align:right; color:#1abc9c; }
-
-  .container { max-width:700px; margin:auto; }
-
-  .graphBtn {
-    display:inline-block; margin-top:20px; padding:15px 25px;
-    background-color:#ff9800; color:#121212; font-weight:bold; border-radius:12px;
-    text-align:center; font-size:18px; position:relative; overflow:hidden; cursor:not-allowed;
-    animation: shake 1s infinite, blink 1s infinite alternate;
-  }
-  .graphBtn::after { content:"🚧 Graphique bientôt disponible"; }
-  @keyframes blink { 0% {background:#ff9800;} 50%{background:#ffc107;} 100%{background:#ff9800;} }
-  @keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-3px);}50%{transform:translateX(3px);}75%{transform:translateX(-3px);}100%{transform:translateX(0);}}
-
-  .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; }
-  .modal-content { background:#1e1e1e; padding:20px; border-radius:12px; text-align:center; width:300px; }
-  .modal-content input { width:100%; margin-bottom:10px; }
-  .modal-content button { width:45%; margin:5px; }
-
-  #filterWeek { margin-top:10px; background:#272727; color:#e0e0e0; }
-
-  #msgBox {
-    position:fixed;top:10px;right:10px;padding:15px;border-radius:10px;color:#fff;
-    background:#16a085; display:none; z-index:1001; font-weight:bold;
-  }
-
-  @media(max-width:600px){
-    th,td{font-size:14px;padding:8px;}
-    h1{font-size:2em;}
-    button,input,select{font-size:14px;padding:8px;}
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      text-align: center;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <h1>Vinted Tracker Pro 💸</h1>
-
-  <label>Nom de l'article :</label>
-  <input type="text" id="itemName" placeholder="Ex: Pull Zara">
-  <label>Prix d'achat (€) :</label>
-  <input type="number" id="itemCost" placeholder="Ex: 10">
-  <label>Prix de vente (€) :</label>
-  <input type="number" id="itemPrice" placeholder="Ex: 25">
-  <label>Frais Vinted (%) :</label>
-  <input type="number" id="vintedFee" placeholder="Ex: 5" value="5">
-  <label>Semaine de la vente :</label>
-  <select id="filterWeek" onchange="filterWeek()">
-    <option value="all">Toutes les semaines</option>
-  </select>
-
-  <button id="addBtn" onclick="addSale()">Mettre en vente</button>
-  <button id="deleteAllBtn" onclick="deleteAllSales()">Tout supprimer</button>
-
-  <table id="salesTable">
-    <thead>
-      <tr>
-        <th>Article</th>
-        <th>Prix d'achat (€)</th>
-        <th>Prix de vente (€)</th>
-        <th>Frais (€)</th>
-        <th>Profit net (€)</th>
-        <th>Date</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div id="total">Profit total : 0 €</div>
-  <div class="graphBtn"></div>
-</div>
-
-<div class="modal" id="editModal">
-  <div class="modal-content">
-    <h3>Modifier vente</h3>
-    <input type="text" id="editName">
-    <input type="number" id="editCost">
-    <input type="number" id="editPrice">
-    <input type="number" id="editFee">
-    <br>
-    <button onclick="saveEdit()">Sauvegarder</button>
-    <button onclick="closeModal()">Annuler</button>
-  </div>
-</div>
-
-<div id="msgBox"></div>
-
-<script>
-let sales = [], editIndex = null;
-
-window.onload = () => {
-  const saved = localStorage.getItem('vintedSales');
-  if(saved) sales = JSON.parse(saved);
-  sales.forEach(addSaleToTable);
-  updateTotal();
-  populateWeeks();
-};
-
-function addSale(){
-  const name = document.getElementById('itemName').value;
-  const cost = parseFloat(document.getElementById('itemCost').value);
-  const price = parseFloat(document.getElementById('itemPrice').value);
-  const feePercent = parseFloat(document.getElementById('vintedFee').value);
-  if(!name||isNaN(cost)||isNaN(price)||isNaN(feePercent)){ alert('Remplis tous les champs !'); return; }
-  const fee = price*(feePercent/100);
-  const profit = price - fee - cost;
-  const date = new Date();
-  const week = getWeekNumber(date);
-  const sale = {name,cost,price,fee,profit,date:date.toISOString(),week};
-  sales.push(sale);
-  saveSales();
-  addSaleToTable(sale,true);
-  updateTotal();
-  populateWeeks();
-  showMessage(sale);
-}
-
-function addSaleToTable(sale,fade=false){
-  const table = document.querySelector('#salesTable tbody');
-  const row = table.insertRow();
-  if(fade) row.classList.add('fade-in');
-  row.innerHTML = `
-    <td>${sale.name}</td>
-    <td>${sale.cost.toFixed(2)} €</td>
-    <td>${sale.price.toFixed(2)} €</td>
-    <td>${sale.fee.toFixed(2)} €</td>
-    <td class="${sale.profit>=0?'profit-positive':'profit-negative'}">${sale.profit.toFixed(2)} €</td>
-    <td>${new Date(sale.date).toLocaleDateString()}</td>
-    <td>
-      <button onclick="editSale(this)">✏️</button>
-      <button onclick="removeSale(this)">🗑️</button>
-    </td>
-  `;
-}
-
-function removeSale(btn){
-  const row=btn.parentNode.parentNode;
-  sales.splice(row.rowIndex-1,1);
-  saveSales();
-  row.remove();
-  updateTotal();
-  populateWeeks();
-}
-
-function editSale(btn){
-  const row=btn.parentNode.parentNode;
-  editIndex = row.rowIndex-1;
-  const sale = sales[editIndex];
-  document.getElementById('editName').value=sale.name;
-  document.getElementById('editCost').value=sale.cost;
-  document.getElementById('editPrice').value=sale.price;
-  document.getElementById('editFee').value=(sale.fee/sale.price*100).toFixed(2);
-  document.getElementById('editModal').style.display='flex';
-}
-
-function saveEdit(){
-  const name=document.getElementById('editName').value;
-  const cost=parseFloat(document.getElementById('editCost').value);
-  const price=parseFloat(document.getElementById('editPrice').value);
-  const feePercent=parseFloat(document.getElementById('editFee').value);
-  const fee = price*(feePercent/100);
-  const profit = price - fee - cost;
-  const week = getWeekNumber(new Date(sales[editIndex].date));
-  sales[editIndex] = {name,cost,price,fee,profit,date:sales[editIndex].date,week};
-  saveSales();
-  reloadTable();
-  closeModal();
-}
-
-function closeModal(){ document.getElementById('editModal').style.display='none'; }
-
-function updateTotal(){
-  const total = sales.reduce((a,s)=>a+s.profit,0);
-  document.getElementById('total').textContent=`Profit total : ${total.toFixed(2)} €`;
-}
-
-function saveSales(){ localStorage.setItem('vintedSales',JSON.stringify(sales)); }
-function deleteAllSales(){ if(confirm("Tout supprimer ?")){ sales=[]; saveSales(); reloadTable(); populateWeeks(); } }
-function reloadTable(){ document.querySelector('#salesTable tbody').innerHTML=''; sales.forEach(addSaleToTable); updateTotal(); }
-
-function getWeekNumber(d){
-  d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
-  const dayNum=d.getUTCDay()||7;
-  d.setUTCDate(d.getUTCDate()+4-dayNum);
-  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d-yearStart)/86400000)+1)/7);
-}
-
-function populateWeeks(){
-  const select=document.getElementById('filterWeek');
-  const weeks=[...new Set(sales.map(s=>s.week))].sort((a,b)=>a-b);
-  select.innerHTML='<option value="all">Toutes les semaines</option>';
-  weeks.forEach(w=>{ const opt=document.createElement('option'); opt.value=w; opt.text=`Semaine ${w}`; select.appendChild(opt); });
-}
-
-function filterWeek(){
-  const val=document.getElementById('filterWeek').value;
-  const tbody=document.querySelector('#salesTable tbody');
-  tbody.innerHTML='';
-  sales.forEach(s=>{ if(val==='all'||s.week==val) addSaleToTable(s); });
-  updateTotal();
-}
-
-function showMessage(sale){
-  let msg='', bg='#16a085';
-  if(sale.profit>50){ msg=`🚀 ${sale.name} est une bombe à profit ! +${sale.profit.toFixed(2)}€`; bg='#1abc9c'; }
-  else if(sale.profit>0){ msg=`👍 ${sale.name} rapporte du cash ! +${sale.profit.toFixed(2)}€`; bg='#3498db'; }
-  else{ msg=`⚠️ ${sale.name} n'était pas rentable ! ${sale.profit.toFixed(2)}€`; bg='#e74c3c'; }
-
-  const box = document.getElementById('msgBox');
-  box.textContent = msg;
-  box.style.background = bg;
-  box.style.display = 'block';
-  setTimeout(()=>{ box.style.display='none'; }, 2500);
-}
-
-// Analyse rapide
-function analyzeSales(){
-  if(sales.length===0) return;
-  let best=sales[0], worst=sales[0];
-  sales.forEach(s=>{ if(s.profit>best.profit) best=s; if(s.profit<worst.profit) worst=s; });
-  console.log(`🏆 Top vente: ${best.name} +${best.profit.toFixed(2)}€`);
-  console.log(`⚠️ Vente à éviter: ${worst.name} ${worst.profit.toFixed(2)}€`);
-}
-analyzeSales();
-</script>
+  <h1>Site en maintenance 🔧</h1>
+  <p>On revient très vite avec des nouveautés !</p>
 </body>
 </html>
