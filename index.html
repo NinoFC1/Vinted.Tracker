@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Site en maintenance</title>
+<title>Site en maintenance - Noël 🎄</title>
 <style>
   /* ==== Général ==== */
   body, html {
@@ -14,7 +14,7 @@
     display:flex;
     justify-content:center;
     align-items:center;
-    background: #121212;
+    background: linear-gradient(135deg, #8B0000, #006400);
     color: #fff;
     text-align:center;
   }
@@ -23,20 +23,31 @@
     font-size: 3em;
     margin-bottom: 0.3em;
     color: #FFD700;
+    text-shadow: 2px 2px 5px #000;
   }
 
   p {
     font-size:1.5em;
     margin-top:0;
-    color:#e0e0e0;
+    color:#fff;
   }
 
   /* ==== Container ==== */
   .maintenance-box {
     padding: 40px;
     border-radius: 20px;
-    background: #1e1e1e;
-    box-shadow: 0 0 20px rgba(255,215,0,0.4);
+    background: rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+    position: relative;
+  }
+
+  /* ==== Mini sapin ==== */
+  .christmas-tree {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 50px;
+    color: #FFD700;
   }
 
   /* ==== Responsive ==== */
@@ -44,13 +55,15 @@
     h1{font-size:2em;}
     p{font-size:1em;}
     .maintenance-box{padding:20px;}
+    .christmas-tree{font-size:35px; top:5px; right:5px;}
   }
 </style>
 </head>
 <body>
   <div class="maintenance-box">
+    <div class="christmas-tree">🎄</div>
     <h1>🚧 Site en maintenance 🚧</h1>
-    <p>On revient très vite, merci pour votre patience !</p>
+    <p>On revient très vite, profitez de l'ambiance festive !</p>
   </div>
 </body>
 </html>
